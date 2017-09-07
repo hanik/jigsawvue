@@ -4,7 +4,7 @@
     <h2>Essential Links</h2>
     <ul>
       <li>
-        <div class="button" @click="call">call to server</div>
+        <div class="button test" @click="call">call to server</div>
       </li>
       <li>{{testData}}</li>
     </ul>
@@ -24,8 +24,19 @@
     },
     methods: {
       call: function () {
-        this.$data.testData = 'call to server button clicked!'
-        axois.get(process.env.API_URL + '/test')
+        let element = this.$el.querySelector('.test')
+        if (element.classList.contains('on')) {
+          element.classList.remove('on')
+          this.$data.testData = 'testData'
+        } else {
+          element.classList.add('on')
+          let baseURI = process.env.API_URL
+          this.$http.get(`${baseURI}/test`)
+            .then((result) => {
+              console.log(result)
+              this.$data.testData = result.data
+            })
+        }
       }
     }
 }
@@ -50,12 +61,20 @@ li {
 a {
   color: #42b983;
 }
+
   .button {
     height: 24px;
-    background-color: antiquewhite;
+    background-color: aliceblue;
     cursor: pointer;
     border: 1px solid lightgray;
     font-size: 16px;
     padding: 10px;
+  }
+  .test {
+    background-color: azure;
+  }
+
+  .on {
+    background-color: lightskyblue;
   }
 </style>
